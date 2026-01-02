@@ -25,7 +25,7 @@ public class JwtService {
         // Extraer los roles del usuario y convertirlos a String
         String roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(" "));
 
         // Construir el token JWT
         return Jwts.builder()

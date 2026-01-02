@@ -73,7 +73,12 @@ public class AuthController {
             Usuario usuario = new Usuario();
             usuario.setEmail(registerRequest.email());
             usuario.setPassword(passwordEncoder.encode(registerRequest.password()));  // Cifrar password
-            usuario.setRoles("ROLE_USER");  // Rol por defecto
+            //modificacion parapoder hacer un admin
+            if (registerRequest.roles() != null && !registerRequest.roles().isEmpty()) {
+                usuario.setRoles(registerRequest.roles());
+            } else {
+                usuario.setRoles("ROLE_USER");
+            }
             usuario.setEnabled(true);
 
             usuarioRepository.save(usuario);

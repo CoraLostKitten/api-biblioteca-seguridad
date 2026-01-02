@@ -35,9 +35,14 @@ public class SecurityConfig {
                 // Configurar autorización de peticiones HTTP
                 // Define qué rutas son públicas y cuáles requieren autenticación
                 .authorizeHttpRequests(auth -> auth
-                         .requestMatchers("/auth/**").permitAll()  // /auth/login y /auth/register son públicos
-                        .requestMatchers("/admin/**").hasRole("ADMIN") //a la url de pa parte de Admin solo se podra acceder si se tiene el rol de admin
-                        .anyRequest().authenticated()              // Todas las demás rutas requieren autenticación
+                        .requestMatchers("/auth/**").permitAll()
+
+                        // CAMBIA ESTO: Usa hasAuthority y el nombre completo que guardas en la BD
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/libros/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/libros/**").hasAuthority("ROLE_ADMIN")
+
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .anyRequest().authenticated()
                 )
 
                 // Configurar validación automática de tokens JWT
