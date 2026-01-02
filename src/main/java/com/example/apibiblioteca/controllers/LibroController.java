@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -63,7 +64,8 @@ public class LibroController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // 5. DELETE /libros/{id}
+    // 5. DELETE /libros/{id} SOLO PUEDEN BORRAR LOS ADMINISTRADORES
+    @PreAuthorize("hasRole('ADMIN')")//proteger endpoint con roles
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLibro(@PathVariable Long id) {
         if (libroRepository.existsById(id)) {
@@ -105,7 +107,8 @@ public class LibroController {
         return ResponseEntity.ok(libroRepository.save(libro));
     }
 
-    // 9. DELETE quitar autor
+    // 9. DELETE quitar autor SOLO PUEDEN BORRAR LOS ADMINISTRADORES
+    @PreAuthorize("hasRole('ADMIN')") //proteger endpoint con roles
     @DeleteMapping("/{libroId}/autores/{autorId}")
     @Transactional
     public ResponseEntity<Void> quitarAutor(@PathVariable Long libroId, @PathVariable Long autorId) {
